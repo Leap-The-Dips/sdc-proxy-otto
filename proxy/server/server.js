@@ -3,9 +3,11 @@ let express = require('express');
 let path = require('path');
 let request = require('request');
 let bodyParser = require('body-parser');
+const morgan = require('morgan');
 
 
 let app = express();
+app.use(morgan('dev'));
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({extended: false}));
 
@@ -16,7 +18,7 @@ app.use(express.static(p));
 
 app.get('/suggested', (req, res) => {
   let id = req.query.prod_id;
-  request("http://localhost:3001/suggested?prod_id="+id, (err, resp, body) =>{
+  request("http://sdc-alb-1113812689.us-east-2.elb.amazonaws.com:3001/suggested?prod_id="+id, (err, resp, body) =>{
     if (!err && resp.statusCode == 200) {
       //Doesn't like when I set status Code - Error: Can't set headers after they are sent.
       res.send(body)
